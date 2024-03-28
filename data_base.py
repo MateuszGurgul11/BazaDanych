@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+import adding_data
 
 def create_connection(db_file):
     """Connection to sqlite database"""
@@ -26,43 +27,6 @@ def execute_sql(conn, sql):
     except Error as e:
         print(e)
 
-def add_project(conn, project):
-    """Adding project into projects table
-    :param conn: connecting object
-    :param project: 
-    :return: project id
-    """
-    sql = """INSERT INTO projects(nazwa, start_date, end_date)
-    VALUES(?, ?, ?)
-    """
-    try:
-        cursor = conn.cursor()
-        cursor.execute(sql, project)
-        conn.commit()
-    except Error as e:
-        print(e)
-
-    return cursor.lastrowid
-
-def add_task(conn, task):
-    """Adding task into tasks object
-    :param conn: connectiong object
-    :param taks:
-    :return: task id
-    """
-    sql = """INSERT INTO tasks(projekt_id, nazwa, opis, status, start_date, end_date)
-    VALUES(?, ?, ?, ?, ?, ?)
-    """
-    try:
-        cursor = conn.cursor()
-        cursor.execute(sql, task)
-        conn.commit()
-        print("Poprawnie dodano dane")
-    except Error as e:
-        print(e)
-    
-    return cursor.lastrowid
-
 if __name__ == "__main__":
     create_projects_table = """CREATE TABLE IF NOT EXISTS projects(
     "id"	INTEGER,
@@ -84,13 +48,13 @@ if __name__ == "__main__":
       FOREIGN KEY (projekt_id) REFERENCES projects (id)
     );
     """
-
+ 
     db_file = "database.db"
     conn = create_connection(db_file)
 
     project = ("cwiczenia", "2024-12-1", "2024-12-5")
-    pr_id = add_project(conn, project)
-    
+    pr_id = adding_data.add_project(conn, project)
+
     task = (pr_id, "pompki", "100 pompek", "started", "2024-12-1", "2024-12-5")
-    task_id = add_task(conn, task)
+    task_id = adding_data.add_task(conn, task)
     conn.close()
