@@ -1,6 +1,5 @@
 import sqlite3
 from sqlite3 import Error
-import adding_data
 
 def create_connection(db_file):
     """Connection to sqlite database"""
